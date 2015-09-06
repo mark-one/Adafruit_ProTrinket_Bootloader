@@ -53,6 +53,7 @@
 #include <usbdrv/usbdrv.c>	// must be included, because of static function declarations are being used, which saves flash space
 
 // enable features here
+#define ENABLE_BOOTLOAD_BYPASS
 #define ENABLE_FLASH_WRITING
 #define ENABLE_FLASH_READING
 #define ENABLE_EEPROM_WRITING
@@ -437,6 +438,25 @@ int	main ( void )
 	// main program loop
 	while (1)
 	{
+
+		#ifdef ENABLE_BOOTLOAD_BYPASS
+		//Set as an input
+		BOOTLOAD_BYPASS_DDR &= ~_BV(BOOTLOAD_BYPASS);
+		
+		//Enable soft pullup
+		BOOTLOAD_BYPASS_PORT |= _BV(BOOTLOAD_BYPASS);
+		
+		//If the pin is high then lets bypass all this funny business
+		if( BOOTLOAD_BYPASS_PIN &= _BV(BOOTLOAD_BYPASS)) {
+			
+			//Disable pullup
+			BOOTLOAD_BYPASS_PORT &= ~_BV(BOOTLOAD_BYPASS);
+			
+			//Break to execute main code
+			break;
+		}
+		#endif
+
 		usbPoll();
 
 		#ifdef ENABLE_OPTIBOOT

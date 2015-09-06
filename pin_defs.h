@@ -94,6 +94,18 @@
 #endif
 #endif
 
+/*Suppport for bootload bypass*/
+#ifndef BOOTLOAD_BYPASS_PIN
+#define BOOTLOAD_BYPASS_PIN D3
+#endif
+
+#if BOOTLOAD_BYPASS_PIN == D3
+#undef BOOTLOAD_BYPASS_PIN
+#define BOOTLOAD_BYPASS_DDR     DDRD
+#define BOOTLOAD_BYPASS_PORT    PORTD
+#define BOOTLOAD_BYPASS_PIN     PIND
+#define BOOTLOAD_BYPASS         PIND3
+#endif
 /*
  * ------------------------------------------------------------------------
  * A bunch of macros to enable the LED to be specifed as "B5" for bit 5 
